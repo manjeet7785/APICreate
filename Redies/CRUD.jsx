@@ -10,6 +10,7 @@ const Midd = require("./Midd.jsx")
 const authRouter = require('./root/auth.jsx');
 const userRouter = require("./root/Users/UserAuth.jsx");
 const commentRouter = require("./root/comment/Comment.jsx")
+const RedisClient = require("./configRedis/Redies.jsx")
 const app = Express();
 
 
@@ -125,19 +126,46 @@ app.use("/comment", commentRouter);
 // })
 
 
+const InitlizeConnection = async () => {
+  try {
+    // await RedisClient.connect();
+    // console.log("Connected Successfully");
 
+    // await main();
+    // console.log("Connected To DB SuccessFully");
 
-main()
-  .then(async () => {
-    console.log("Mongoose Connected to MongoDB");
+    await Promise.all([RedisClient.connect(), main()]);
+    console.log("this is the connection");
+
     app.listen(process.env.PORT, () => {
       console.log(`Server is running on http://localhost: ${process.env.PORT}`);
     });
 
+  }
+  catch (err) {
+    console.log("Error : " + err);
 
-  })
+  }
+}
+
+InitlizeConnection();
 
 
 
-  .catch(err => console.error("Mongoose connection error:", err));
+// main()
+//   .then(async () => {
+//     console.log("Redis Connect to the Redies ");
+
+//     console.log("Mongoose Connected to MongoDB");
+//     app.listen(process.env.PORT, () => {
+//       console.log(`Server is running on http://localhost: ${process.env.PORT}`);
+//     });
+
+
+//   })
+
+
+
+//   .catch(err => console.error("Mongoose connection error:", err));
+
 
